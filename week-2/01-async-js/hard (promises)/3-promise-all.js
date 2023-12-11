@@ -5,19 +5,34 @@
  */
 
 function wait1(t) {
-
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve();
+        }, 1000)
+    })
 }
 
 function wait2(t) {
-
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve();
+        }, 2000)
+    })
 }
 
 function wait3(t) {
-
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve();
+        }, 3000)
+    })
 }
 
 function calculateTime(t1, t2, t3) {
-
+    const startTime = Date.now();
+    Promise.all([wait1(), wait2(), wait3()]).then(() => {
+        console.log(`It took ${Date.now() - startTime} milliseconds for all promises to resolve`);
+    })
 }
 
 module.exports = calculateTime;

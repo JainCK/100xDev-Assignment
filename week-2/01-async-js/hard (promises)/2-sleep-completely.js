@@ -5,6 +5,15 @@
  */
 
 function sleep(milliseconds) {
+    const startTime = Date.now();
+    while (Date.now() - startTime < milliseconds) {
+        // Busy wait
+    }
 }
+
+
+console.log('Start');
+sleep(3000); // Sleep for 3 seconds
+console.log('End');
 
 module.exports = sleep;
