@@ -12,7 +12,7 @@ function clockinAMPM() {
     const seconds = currentDate.getSeconds();
     
     const amPM = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12; // Convert 24-hour time to 12-hour time
+    hours = hours % 12 || 12; 
     
     console.log(hours + ":" + (minutes < 10 ? '0' : '') + minutes + ":" + (seconds < 10 ? '0' : '') + seconds + " " + amPM);
 }
