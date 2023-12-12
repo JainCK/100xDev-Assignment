@@ -5,15 +5,20 @@
  */
 
 function sleep(milliseconds) {
-    const startTime = Date.now();
-    while (Date.now() - startTime < milliseconds) {
-        // Busy wait
-    }
+    return new Promise(resolve => {
+        setTimeout(resolve, milliseconds);
+    });
 }
 
+console.log("Start");
 
-console.log('Start');
-sleep(3000); // Sleep for 3 seconds
-console.log('End');
+sleep(2000).then(() => {
+    console.log("After 2 seconds");
+});
+
+console.log("End");
+
+
+
 
 module.exports = sleep;
