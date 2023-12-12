@@ -10,6 +10,6 @@ function wait(n) {
     })
 }
 
-wait(10).then(() => console.log('You\'ll see this after 10 second'));
+
 
 module.exports = wait;
