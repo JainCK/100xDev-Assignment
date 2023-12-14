@@ -41,9 +41,102 @@
  */
   const express = require('express');
   const bodyParser = require('body-parser');
+  const fs = require('fs/promises');
   
   const app = express();
+  const PORT = 3000;
+  
+  let todos = [];
   
   app.use(bodyParser.json());
   
-  module.exports = app;
+  // GET all todos
+  app.get('/todos', (req, res) => {
+    res.status(200).json(todos);
+  });
+  
+  // GET a specific todo by ID
+  app.get('/todos/:id', (req, res) => {
+    const id = req.params.id;
+    const todo = todos.find((t) => t.id === parseInt(id));
+  
+    if (todo) {
+      res.status(200).json(todo);
+    } else {
+      res.status(404).send('Not Found');
+    }
+  });
+  
+  // POST a new todo
+  app.post('/todos', async (req, res) => {
+    const todo = req.body;
+    todo.id = todos.length + 1;
+    todos.push(todo);
+  
+    // Save to file
+    await saveToFile();
+  
+    res.status(201).json({ id: todo.id });
+  });
+  
+  // PUT (update) an existing todo by ID
+  app.put('/todos/:id', async (req, res) => {
+    const id = req.params.id;
+    const updatedTodo = req.body;
+    const index = todos.findIndex((t) => t.id === parseInt(id));
+  
+    if (index !== -1) {
+      todos[index] = { ...todos[index], ...updatedTodo };
+  
+      // Save to file
+      await saveToFile();
+  
+      res.status(200).send('OK');
+    } else {
+      res.status(404).send('Not Found');
+    }
+  });
+  
+  // DELETE a todo by ID
+  app.delete('/todos/:id', async (req, res) => {
+    const id = req.params.id;
+    const index = todos.findIndex((t) => t.id === parseInt(id));
+  
+    if (index !== -1) {
+      todos.splice(index, 1);
+  
+      // Save to file
+      await saveToFile();
+  
+      res.status(200).send('OK');
+    } else {
+      res.status(404).send('Not Found');
+    }
+  });
+  
+  // Function to save todos to a file
+  async function saveToFile() {
+    try {
+      await fs.writeFile('todos.json', JSON.stringify(todos, null, 2));
+    } catch (error) {
+      console.error('Error saving to file:', error);
+    }
+  }
+  
+  // Load todos from file if it exists
+  async function loadFromFile() {
+    try {
+      const data = await fs.readFile('todos.json');
+      todos = JSON.parse(data);
+    } catch (error) {
+      console.error('Error loading from file:', error);
+    }
+  }
+  
+  // Start the server
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+    // Load todos from file on startup
+    loadFromFile();
+  });
+  
