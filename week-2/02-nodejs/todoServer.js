@@ -52,16 +52,16 @@
   
   // GET all todos
   app.get('/todos', (req, res) => {
-    res.status(200).json(todos);
+    res.json(todos);
   });
   
   // GET a specific todo by ID
   app.get('/todos/:id', (req, res) => {
     const id = req.params.id;
-    const todo = todos.find((t) => t.id === parseInt(id));
+    const todo = todos.find(t => t.id === parseInt(req.params.id));
   
     if (todo) {
-      res.status(200).json(todo);
+      res.json(todo);
     } else {
       res.status(404).send('Not Found');
     }
