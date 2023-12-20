@@ -11,9 +11,19 @@ let errorCount = 0;
 // 2. Maintain the errorCount variable whose value should go up every time there is an exception in any endpoint
 
 
+const errorHandlerMiddleware = (err,req,res,next)=>{
+  if(err){
+   errorCount+=1
+   res.status(404).send(err.message)
+  }else{  
+  next();
+  }
+}
+
+//Handles invalid route
 const invalidRouteHandlerMiddleware = (req,res)=>{
-  res.status(404).send('Invalid route/method entered')
-  errorCount+=1
+ res.status(404).send('Invalid route/method entered')
+ errorCount+=1
 }
 
 app.get('/user', function(req, res) {
@@ -30,16 +40,9 @@ app.get('/errorCount', function(req, res) {
 });
 
 
-app.use('/', invalidRouteHandlerMiddleware)
+app.use('/',invalidRouteHandlerMiddleware)
 
-app.use((err, res, req, next) => {
-  if(err) {
-    errorCount++
-    res.status(404).send(err.message)
-  } else {
-    next();
-  }
-});
+app.use(errorHandlerMiddleware)
 
 
 
