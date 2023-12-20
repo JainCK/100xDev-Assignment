@@ -20,7 +20,7 @@ const errorHandlerMiddleware = (err,req,res,next)=>{
   }
 }
 
-//Handles invalid route
+
 const invalidRouteHandlerMiddleware = (req,res)=>{
  res.status(404).send('Invalid route/method entered')
  errorCount+=1
