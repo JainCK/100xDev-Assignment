@@ -11,7 +11,10 @@ let errorCount = 0;
 // 2. Maintain the errorCount variable whose value should go up every time there is an exception in any endpoint
 
 
-
+const invalidRouteHandlerMiddleware = (req,res)=>{
+  res.status(404).send('Invalid route/method entered')
+  errorCount+=1
+}
 
 app.get('/user', function(req, res) {
   throw new Error("User not found");
@@ -25,6 +28,19 @@ app.post('/user', function(req, res) {
 app.get('/errorCount', function(req, res) {
   res.status(200).json({ errorCount });
 });
+
+
+app.use('/', invalidRouteHandlerMiddleware)
+
+app.use((err, res, req, next) => {
+  if(err) {
+    errorCount++
+    res.status(404).send(err.message)
+  } else {
+    next();
+  }
+});
+
 
 
 module.exports = app;
