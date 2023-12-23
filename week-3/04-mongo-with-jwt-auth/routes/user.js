@@ -68,9 +68,21 @@ app.post('/signup', async(req, res) => {
     }
 });
 
-app.get('/courses', (req, res) => {
+app.get('/courses', async (req, res) => {
     // Implement listing all courses logic
+    try{
+        const allCourses = await Course.find();
+
+        res.status(200).json({
+            courses: allCourses,
+        })
+    }catch(err){
+        res.status(500).json({
+            message: "Something went wrong",
+        })
+    }
 });
+
 
 app.post('/courses/:courseId', userMiddleware, (req, res) => {
     // Implement course purchase logic
