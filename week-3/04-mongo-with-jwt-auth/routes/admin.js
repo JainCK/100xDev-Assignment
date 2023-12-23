@@ -72,7 +72,50 @@ app.post('/signin', async (req, res) => {
 
 app.post('/courses', adminMiddleware, (req, res) => {
     // Implement course creation logic
+
+    try {
+        const tokenHead = req.headers['authorization'];
+        const token = tokenHead.split(" ")[1];
+
+        const user = await Admin.findOne({token: token});
+
+        const title = req.body.title;
+        const description = req.body.description;
+        const price = req.body.price;
+        const imageLink = req.body.imageLink;
+
+        const newCourse = await Course.create({
+            title: title,
+            description: description,
+            price: price,
+            imageLink: imageLink,
+            createdBy: user.username,
+            published: true,
+            usersEnrolled: [], 
+        })
+        const addCourse = await Admin.findByIdAndUpdate(
+            user._id,
+            {
+                $push:{
+                    coursesCreated: newCourse._id,
+                }
+            },
+            {new: true},
+        )
+
+        res.status(200).json({
+            message: 'Course created successfully', 
+            courseId: newCourse._id,
+        })
+
+    }catch(err){
+        res.status(500).json({
+            message: "Something went wrong",
+        })
+    }
 });
+
+
 
 app.get('/courses', adminMiddleware, (req, res) => {
     // Implement fetching all courses logic
