@@ -39,8 +39,33 @@ app.post('/signup', async (req, res) => {
     }
 });
 
-app.post('/signin', (req, res) => {
+app.post('/signup', async(req, res) => {
     // Implement admin signup logic
+    try{
+        const username = req.body.username;
+        const password = req.body.password;
+
+        if(!username || !password){
+            res.status(404).json({
+                message: "Username or Password not found",
+            })
+        }
+
+        const newUser = await User.create({
+            username: username,
+            password: password,
+            coursesCreated: [],
+            token: "",
+        })
+
+        res.status(200).json({
+            message: 'User created successfully',
+        })
+    }catch(err){
+        res.status(500).json({
+            message: "User could not be created !!",
+        })
+    }
 });
 
 app.get('/courses', (req, res) => {
