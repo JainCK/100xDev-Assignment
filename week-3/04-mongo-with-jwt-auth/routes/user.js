@@ -84,8 +84,44 @@ app.get('/courses', async (req, res) => {
 });
 
 
-app.post('/courses/:courseId', userMiddleware, (req, res) => {
+app.post('/courses/:courseId', userMiddleware, async (req, res) => {
     // Implement course purchase logic
+    try{
+        const tokenHead = req.headers['authorization'];
+        const token = tokenHead.split(" ")[1];
+        const courseId = req.params.courseId;
+
+        const user = await User.findOne({token: token});
+
+        const updateUser = await User.findByIdAndUpdate(
+            user._id,
+            {
+                $push: {
+                    coursesEnrolled: courseId,
+                }
+            },
+            {new: true},
+        )
+
+        const updateCourse = await Course.findByIdAndUpdate(
+            courseId,
+            {
+                $push: {
+                    usersEnrolled: user._id,
+                }
+            },
+            {new: true},
+        )
+
+        res.status(200).json({
+            message: 'Course purchased successfully'
+        })
+    }catch(err){
+        res.status(500).json({
+            message: "Something went wrong",
+            error: err.message,
+        })
+    }
 });
 
 app.get('/purchasedCourses', userMiddleware, (req, res) => {
