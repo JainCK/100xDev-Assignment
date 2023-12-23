@@ -70,7 +70,7 @@ app.post('/signin', async (req, res) => {
     }
 });
 
-app.post('/courses', adminMiddleware, (req, res) => {
+app.post('/courses', adminMiddleware, async (req, res) => {
     // Implement course creation logic
 
     try {
@@ -117,8 +117,19 @@ app.post('/courses', adminMiddleware, (req, res) => {
 
 
 
-app.get('/courses', adminMiddleware, (req, res) => {
+app.get('/courses', adminMiddleware, async (req, res) => {
     // Implement fetching all courses logic
+    try{
+        const allCourses = await Course.find();
+
+        res.status(200).json({
+            courses: allCourses,
+        })
+    }catch(err){
+        res.status(500).json({
+            message: "Something went wrong",
+        })
+    }
 });
 
 module.exports = router;
