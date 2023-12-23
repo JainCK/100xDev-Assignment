@@ -1,10 +1,42 @@
 const { Router } = require("express");
-const router = Router();
+const { User, Course } = require("../db");
+const jwt = require("jsonwebtoken");
 const userMiddleware = require("../middleware/user");
+const app = Router();
+require('dotenv').config();
 
 // User Routes
-app.post('/signup', (req, res) => {
+app.post('/signup', async (req, res) => {
     // Implement user signup logic
+    try{
+        const username = req.body.username;
+        const password = req.body.password;
+
+        if(!username || !password){
+            res.status(404).json({
+                message: "Username or Password not found",
+            })
+        }
+
+        const jwtPassword = process.env.USER_PASS;
+        const token = jwt.sign({username: username, password: password}, jwtPassword)
+
+        const updateUser = await User.findOneAndUpdate(
+            {username: username},
+            {
+                token: token,
+            },
+            {new: true}
+        )
+
+        res.status(200).json({
+            token: token,
+        })
+    }catch(err){
+        res.status(500).json({
+            message: "User could not be signed-in !!",
+        })
+    }
 });
 
 app.post('/signin', (req, res) => {
