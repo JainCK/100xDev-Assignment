@@ -124,6 +124,21 @@ app.post('/courses/:courseId', userMiddleware, async (req, res) => {
     }
 });
 
-app.get('/purchasedCourses', userMiddleware, (req, res) => {
+app.get('/purchasedCourses', userMiddleware, async (req, res) => {
     // Implement fetching purchased courses logic
+    try{
+        const tokenHead = req.headers['authorization'];
+        const token = tokenHead.split(" ")[1];
+        console.log(token);
+        const user = await User.findOne({token: token});
+        console.log(user);
+        res.status(200).json({
+            purchasedCourses: user.coursesEnrolled,
+        })
+    }catch(err){
+        res.status(500).json({
+            message: "Something went wrong",
+            error: err.message,
+        })
+    }
 });
