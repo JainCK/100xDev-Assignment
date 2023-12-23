@@ -40,8 +40,34 @@ app.post('/signup', async (req, res) => {
     }
 });
 
-app.post('/signin', (req, res) => {
+app.post('/signin', async (req, res) => {
     // Implement admin signup logic
+    try {
+        const username = req.body.username;
+        const password = req.body.password;
+
+        if(!username || !password) {
+            res.status(404).json ({
+                message: "Username or Password not Found"
+            });
+        }
+
+        const newAdmin = await Admin.create({
+            username: username,
+            password: password,
+            coursesCreated: []
+        })
+
+        res.status(200).json({
+            message: 'Admin created successfully'
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            message:  'Admin cannot be created'
+        })
+        
+    }
 });
 
 app.post('/courses', adminMiddleware, (req, res) => {
