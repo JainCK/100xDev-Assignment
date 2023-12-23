@@ -8,7 +8,7 @@ function userMiddleware(req, res, next) {
         const tokenHead = req.headers['authorization'];
         const token = tokenHead.split(" ")[1];
         
-        const jwtPassword = process.env.USER_PASS;
+        const jwtPassword = process.env.jwtPassword;
         const decode = jwt.verify(token, jwtPassword);
 
         next();

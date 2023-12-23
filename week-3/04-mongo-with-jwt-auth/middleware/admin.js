@@ -9,7 +9,7 @@ try {
     const tokenHd = req.headers["authorization"];
     const token = tokenHd.split("")[1];
 
-    const jwtPassword= process.env.ADMIN_PASS;
+    const jwtPassword= process.env.jwtPassword;
     const decode = jwt.verify(token, jwtPassword);
 
     next();
