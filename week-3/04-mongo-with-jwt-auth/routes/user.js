@@ -142,3 +142,5 @@ app.get('/purchasedCourses', userMiddleware, async (req, res) => {
         })
     }
 });
+
+
