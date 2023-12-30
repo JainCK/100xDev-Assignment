@@ -1,61 +1,109 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+  <title>Todo App using State</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script>
-    let globalId = 1;
-    let todoState = [];
-    let oldTodoState = [];
+    var globalId = 1;
+    var todoState = [];
+    var oldTodoState = [];
 
-    function addTodoToDom() {
-      
+    function removeTodoFromDom(todoId) {
+      const todoItem = document.getElementById(todoId);
+      todoItem.parentNode.removeChild(todoItem);
+      todoState = todoState.filter((todo) => todo.id !== todoId);
     }
 
-    function removeTodoFromDom(todo) {
-      
+    function addTodoToDom(newTodo) {
+      const todoList = document.getElementById('todoList');
+      const todoItem = document.createElement('li');
+      todoItem.innerHTML = `<b>${newTodo.title}</b>: ${newTodo.desc} <button class="ml-2 bg-red-500 text-white px-2 py-1 rounded" onclick="removeTodoFromDom(${newTodo.id})">Remove</button>`;
+      todoItem.setAttribute('id', newTodo.id);
+      todoItem.className = 'p-2 border-b';
+      todoList.appendChild(todoItem);
     }
 
-    function updateTodoInDom(oldTodo, newTodo) {
-        
-    }
+    function updateTodoInDom(updatedTodo) {
+  const todoItem = document.getElementById(updatedTodo.id);
+
+  if (todoItem) {
+    todoItem.innerHTML = `<b>${updatedTodo.title}</b>: ${updatedTodo.desc} <button class="ml-2 bg-red-500 text-white px-2 py-1 rounded" onclick="removeTodoFromDom(${updatedTodo.id})">Remove</button>`;
+  } else {
+    // If the todo element doesn't exist, add it to the DOM
+    addTodoToDom(updatedTodo);
+  }
+}
+
 
     function updateState(newTodos) {
-      // calculate the diff b/w newTodos and oldTodos.
-      // More specifically, find out what todos are - 
-      // 1. added
-      // 2. deleted
-      // 3. updated
-      const added = [];
-      const deleted = [];
-      const updated = [];
-      // calculate these 3 arrays
-      // call addTodo, removeTodo, updateTodo functions on each of the
-      // elements
-      oldTodoState = newTodos;
+      const added = newTodos.filter(newTodo => !oldTodoState.some(oldTodo => oldTodo.id === newTodo.id));
+      const deleted = oldTodoState.filter(oldTodo => !newTodos.some(newTodo => newTodo.id === oldTodo.id));
+      const updated = newTodos.filter(newTodo => {
+        const oldTodo = oldTodoState.find(todo => todo.id === newTodo.id);
+        return oldTodo && (oldTodo.title !== newTodo.title || oldTodo.desc !== newTodo.desc);
+      });
+
+      for (const newTodo of added) {
+        addTodoToDom(newTodo);
+      }
+
+      for (const deletedTodo of deleted) {
+        removeTodoFromDom(deletedTodo.id);
+      }
+
+      for (const updatedTodo of updated) {
+        updateTodoInDom(updatedTodo);
+      }
+
+      oldTodoState = newTodos.slice();
     }
+
+
 
     function addTodo() {
-      const title = document.getElementById("title").value;
-      const description = document.getElementById("description").value;
-      todoState.push({
-        title: title,
-        description: description,
-        id: globalId++,
-      })
-      updateState(todoState);
-    }
+  const title = document.getElementById('todo').value;
+  const desc = document.getElementById('description').value;
+
+  if (!title) {
+    alert('Please enter a title for the todo.');
+    return;
+  }
+
+  const newTodo = {
+    title: title,
+    desc: desc,
+    id: ++globalId, // Increment globalId before using it for a unique ID
+    done: false,
+  };
+
+  todoState.push(newTodo);
+  addTodoToDom(newTodo);
+  updateState(todoState);
+
+  // Clear input fields
+  document.getElementById('todo').value = '';
+  document.getElementById('description').value = '';
+}
+
+
   </script>
 </head>
-
-<body>
-  <input type="text" id="title" placeholder="Todo title"></input> <br /><br />
-  <input type="text" id="description" placeholder="Todo description"></input> <br /><br />
-  <button onclick="addTodo()">Add todo</button>
-  <br /> <br />
-
-  <div id="todos">
-
+<body class="bg-gray-100 p-8">
+  <div id="container" class="max-w-md mx-auto bg-white p-4 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">Todo App</h1>
+    <div class="mb-4">
+      <label for="todo" class="block text-sm font-medium text-gray-600">Todo</label>
+      <input type="text" name="todo" id="todo" class="mt-1 p-2 border rounded w-full" />
+    </div>
+    <div class="mb-4">
+      <label for="description" class="block text-sm font-medium text-gray-600">Description</label>
+      <input type="text" name="description" id="description" class="mt-1 p-2 border rounded w-full" />
+    </div>
+    <button onclick="addTodo()" class="bg-blue-500 text-white px-4 py-2 rounded">Create</button>
+  </div>
+  <div class="mt-8">
+    <h2 class="text-xl font-bold mb-4">Todo List</h2>
+    <ul id="todoList" class="space-y-2"></ul>
   </div>
 </body>
-
 </html>
