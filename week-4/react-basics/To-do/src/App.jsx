@@ -30,10 +30,10 @@ const App = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-4 rounded shadow">
-      <h1 className="text-2xl font-bold mb-4">Todo App</h1>
+    <div className="container">
+      <h1 className="title">Todo App</h1>
       <div className="mb-4">
-        <label htmlFor="todo" className="block text-sm font-medium text-gray-600">
+        <label htmlFor="todo" className="label">
           Todo
         </label>
         <input
