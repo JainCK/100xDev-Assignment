@@ -6,6 +6,7 @@ import { CreateTodo } from './componenets/CreateTodo'
 import { Todos } from './componenets/Todos'
 
 function App() {
+  const { todos, setTodos } = useState([]);
 
 
   return (
