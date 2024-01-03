@@ -11,7 +11,12 @@ function App() {
   return (
     <>
       <CreateTodo />
-      <Todos />
+      <Todos  todos={[{
+        title: "GYM",
+        description: "30 mins",
+        completed: false
+      }
+      ]}/>
     </>
   )
 }
