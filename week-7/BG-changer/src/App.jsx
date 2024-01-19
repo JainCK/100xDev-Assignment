@@ -6,9 +6,13 @@ function App() {
 
   return (
     <>
-    <div className='w-screen h-screen duration-200' style={{backgroundColor:color}}></div>
+    <div className='w-screen h-screen duration-200' style={{backgroundColor:color}}>
+    <h1 className="pt-12 text-3xl font-bold italic text-sky-400">
+      Tap the Buttons to change the backgroundColor
+      </h1>
+    </div>
     <div className='fixed flex flex-wrap justify-center bottom-12 inset-x-0 px-2'>
-    <div className="flex flex-wrap justify-center gap-3 shadow-lg bg-slate-400 px-3 py-2 rounded-3xl">
+    <div className="flex flex-wrap justify-center gap-3 shadow-lg bg-white px-3 py-2 rounded-3xl">
         <button className='outline-none px-5 py-2 rounded-full bg-red-600 text-slate-200' onClick={()=> setColor("red")}>Red</button>
         <button className='outline-none px-4 py-2 rounded-full bg-yellow-600 text-slate-200' onClick={()=> setColor("yellow")}>Yellow</button>
         <button className='outline-none px-4 py-2 rounded-full bg-black text-slate-200' onClick={()=> setColor("black")}>Black</button>
