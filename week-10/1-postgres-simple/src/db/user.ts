@@ -1,4 +1,4 @@
-import { client } from "..";
+import { client } from "../index";
 
 /*
  * Should insert into the users table
@@ -10,7 +10,7 @@ import { client } from "..";
  * }
  */
 export async function createUser(username: string, password: string, name: string) {
-    
+    const result = client.query('INSERT INTO users(username, password, name) VALUES ('username', 'password', 'name')
 }
 
 /*
