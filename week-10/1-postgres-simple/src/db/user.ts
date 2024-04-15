@@ -9,8 +9,23 @@ import { client } from "../index";
  *   name: string
  * }
  */
-export async function createUser(username: string, password: string, name: string) {
-    const result = client.query('INSERT INTO users(username, password, name) VALUES ('username', 'password', 'name')
+export async function createUser(
+  username: string,
+  password: string,
+  name: string
+) {
+  try {
+    await client.connect();
+    const insertQuery =
+      "INSERT INTO users (username, password, name) VALUES ($1, $2, $3)";
+    const values = [username, password, name];
+    const res = await client.query(insertQuery, values);
+    console.log("Success:", res);
+  } catch (error) {
+    console.error("Error orccurred", error);
+  } finally {
+    await client.end();
+  }
 }
 
 /*
@@ -22,5 +37,18 @@ export async function createUser(username: string, password: string, name: strin
  * }
  */
 export async function getUser(userId: number) {
-    
+  try {
+    await client.connect();
+    const selectQuery = `
+    SELECT * FROM users
+    WHERE userId = $1
+    `;
+    const values = [userId];
+    const res = await client.query(selectQuery, values);
+    console.log("Success:", res);
+  } catch (error) {
+    console.error("Error orccurred", error);
+  } finally {
+    await client.end();
+  }
 }
