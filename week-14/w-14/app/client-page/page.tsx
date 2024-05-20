@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 
-const ClientPage = () => {
+const CPage = () => {
     const [count, setCount] = useState(0)
   return (
     <div>
@@ -15,4 +15,4 @@ const ClientPage = () => {
   )
 }
 
-export default ClientPage
+export default CPage
