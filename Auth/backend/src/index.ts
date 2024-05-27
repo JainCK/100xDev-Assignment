@@ -30,18 +30,13 @@ app.post("/signin", (req, res) => {
   res.send("Logged in!");
 });
 
-app.post("/signin", (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  // do db validations, fetch id of user from db
-  const token = jwt.sign(
-    {
-      id: 1,
-    },
-    JWT_SECRET
-  );
-  res.cookie("token", token);
-  res.send("Logged in!");
+app.get("/user", (req, res) => {
+  const token = req.cookies.token;
+  const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+  // Get email of the user from the database
+  res.send({
+    userId: decoded.id,
+  });
 });
 
 app.post("/logout", (req, res) => {
