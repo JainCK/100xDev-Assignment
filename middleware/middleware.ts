@@ -7,3 +7,7 @@ export function middleware(request: NextRequest) {
   console.log("number of requests is " + requestCount);
   return NextResponse.next();
 }
+
+export const config = {
+  matcher: "/api/:path*",
+};
